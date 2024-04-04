@@ -1,4 +1,4 @@
-package service;
+package com.danielIkmed.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectListing;
@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,12 @@ public class S3Service {
         var putObjectResult = s3client.putObject(bucketName, keyName, file.getInputStream(), null);
         log.info(putObjectResult.getMetadata());
     }
+
+    public InputStreamResource downloadFile(String fileName){
+
+        return new InputStreamResource(getFile(fileName).getObjectContent());
+    }
+
 
     public S3Object getFile(String keyName){
         return  s3client.getObject(bucketName,keyName);

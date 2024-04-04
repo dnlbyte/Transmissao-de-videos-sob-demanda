@@ -1,20 +1,19 @@
-package controller;
+package com.danielIkmed.controller;
 
-import com.amazonaws.auth.policy.Resource;
+
+
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import service.S3Service;
+import com.danielIkmed.service.S3Service;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("/s3")
 public class S3Controller {
     private final S3Service s3Service;
 
@@ -33,6 +32,18 @@ public class S3Controller {
     public String uploadFile(@RequestParam("file") MultipartFile file)throws Exception{
         s3Service.uploadFile(file.getOriginalFilename(), file);
         return "file uploaded";
+    }
+
+    @GetMapping("/ping")
+    public String ping(){
+        return "pong";
+    }
+    @GetMapping("/download/{fileName}")
+    public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String fileName){
+        InputStreamResource file = s3Service.downloadFile(fileName);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(file);
     }
 
 }
