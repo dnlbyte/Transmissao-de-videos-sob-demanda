@@ -4,6 +4,7 @@ package com.danielIkmed.controller;
 
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.danielIkmed.service.S3Service;
 
 import java.util.List;
+
+
+//ToDo Criação de cursos/ iniciar implementação de front end com react
 
 @RestController
 @RequestMapping("/s3")
@@ -45,5 +49,25 @@ public class S3Controller {
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(file);
     }
+
+    @GetMapping("/view/image/{fileName}")
+    public ResponseEntity<InputStreamResource> viewImageFile(@PathVariable String fileName){
+        InputStreamResource file = s3Service.viewImageFile(fileName);
+        return ResponseEntity.ok()
+                         .contentType(MediaType.IMAGE_PNG)
+                         .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+fileName+"\"")
+                         .body(file);
+    }
+
+    @GetMapping("/view/video/{fileName}")
+    public ResponseEntity<InputStreamResource> viewVideoFile(@PathVariable String fileName){
+        InputStreamResource file = s3Service.viewVideoFile(fileName);
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf("video/mp4"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+fileName+"\"")
+                .body(file);
+    }
+
+
 
 }
