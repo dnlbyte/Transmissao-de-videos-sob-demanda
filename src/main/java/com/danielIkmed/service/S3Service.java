@@ -40,6 +40,13 @@ public class S3Service {
         return new InputStreamResource(getFile(fileName).getObjectContent());
     }
 
+    public InputStreamResource viewImageFile(String fileNmame){
+         return  new InputStreamResource(getFile(fileNmame).getObjectContent());
+    }
+
+    public InputStreamResource viewVideoFile(String fileNmame){
+        return  new InputStreamResource(getFile(fileNmame).getObjectContent());
+    }
 
     public S3Object getFile(String keyName){
         return  s3client.getObject(bucketName,keyName);
